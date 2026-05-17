@@ -2,9 +2,6 @@
 
 Bir şirketin çalışanlarının hangi faktörler yüzünden işten ayrıldığını tahmin etmeye çalıştığım sınıflandırma projesi. Logistic Regression ve Random Forest modellerini eğitip karşılaştırdım.
 
-## Neden bu proje?
-
-EDA'dan sonra ML'e geçerken ilk denediğim "ciddi" sınıflandırma projesiydi. Veri seti popüler IBM HR Analytics formatına benziyor — `Attrition` (Yes/No) hedef değişken, geri kalan ~30 sütun feature. Sektör değişkeni olarak iyi bir başlangıç çünkü kategorik + sayısal feature karışımı var.
 
 ## Sorduğum sorular
 
