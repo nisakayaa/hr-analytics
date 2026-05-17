@@ -1,75 +1,57 @@
-# 👥 HR Analytics – Employee Attrition Analysis
+# HR Analytics — Employee Attrition Prediction
 
-Predictive analytics on employee turnover. Identify what factors drive attrition and build a model to flag at-risk employees.
+Bir şirketin çalışanlarının hangi faktörler yüzünden işten ayrıldığını tahmin etmeye çalıştığım sınıflandırma projesi. Logistic Regression ve Random Forest modellerini eğitip karşılaştırdım.
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.3+-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+## Neden bu proje?
 
-## 🎯 Project Overview
+EDA'dan sonra ML'e geçerken ilk denediğim "ciddi" sınıflandırma projesiydi. Veri seti popüler IBM HR Analytics formatına benziyor — `Attrition` (Yes/No) hedef değişken, geri kalan ~30 sütun feature. Sektör değişkeni olarak iyi bir başlangıç çünkü kategorik + sayısal feature karışımı var.
 
-Employee turnover is expensive — recruiting, training, and lost productivity. This project uses descriptive and predictive analytics to:
+## Sorduğum sorular
 
-1. Understand **who leaves** and **why**
-2. Build a model to **predict attrition** risk
-3. Translate findings into **HR retention strategies**
+- Çalışanlar neden ayrılıyor? Hangi faktör en belirleyici?
+- Logistic Regression mı, Random Forest mı daha iyi?
+- Class imbalance var mı? (Ayrılanlar azınlıkta)
+- Model sonuçlarını yöneticiye nasıl anlatırım?
 
-## ❓ Business Questions
+## Bulgular
 
-- What's the company-wide attrition rate?
-- Which departments have the highest turnover?
-- Do salary, overtime, or commute distance predict who leaves?
-- Are younger employees more likely to leave?
-- What's the role of job satisfaction & work-life balance?
+- Random Forest, Logistic Regression'a göre **F1 skorda ~%8 daha iyi**
+- En önemli 3 feature: **Overtime, MonthlyIncome, Age**
+- Mesai yapanların ayrılma olasılığı, yapmayanlara göre **2.5 kat fazla**
+- Genç çalışanlar (25-30 yaş) en yüksek ayrılma riskinde
+- Class imbalance var (%84 kaldı, %16 ayrıldı) → accuracy yanıltıcı, F1/recall'a baktım
 
-## 📁 Structure
+## Yöntem
 
-```
-hr-analytics/
-├── data/
-│   └── hr_data.csv
-├── notebooks/
-│   └── attrition_analysis.ipynb
-├── src/
-│   ├── eda.py
-│   ├── model.py
-│   └── generate_data.py
-├── outputs/
-├── images/
-├── requirements.txt
-└── README.md
-```
+1. **EDA:** dağılımları, korelasyonları, target ile ilişkileri incele
+2. **Preprocessing:** kategorik feature'lar için OneHotEncoder, sayısal için StandardScaler
+3. **Train/test split:** %80/%20, stratified
+4. **Model 1:** Logistic Regression (baseline)
+5. **Model 2:** Random Forest (hyperparameter tuning yok, default — bilinçli tercih)
+6. **Karşılaştırma:** accuracy, precision, recall, F1, ROC-AUC
+7. **Feature importance:** Random Forest'ın `feature_importances_` ile
 
-## 🛠️ Tech Stack
+## Kullandığım araçlar
 
-Python · Pandas · Scikit-learn · Matplotlib · Seaborn
+- pandas, numpy
+- scikit-learn (LogisticRegression, RandomForestClassifier, metrics)
+- matplotlib, seaborn
 
-## 🚀 Run
+## Çalıştırmak için
 
 ```bash
-git clone https://github.com/yourusername/hr-analytics.git
-cd hr-analytics
 pip install -r requirements.txt
 python src/generate_data.py
-python src/eda.py
-python src/model.py
+python src/eda.py        # önce keşifsel analiz
+python src/model.py      # sonra modelleme
 ```
 
-## 📊 Key Findings
+## Not
 
-- 📉 Overall attrition rate: **~16%**
-- 🌙 Employees who work **overtime** are **3x more likely** to leave
-- 💼 **Sales department** has highest turnover
-- 🎓 Single, young (<30), early-career employees are highest risk
-- 🧠 Top predictors: OverTime, MonthlyIncome, Age, JobSatisfaction
+Class imbalance'la ilk burada karşılaştım. İlk denememde modelin %84 accuracy çıktığını görünce sevinmiştim — sonra fark ettim ki **model herkese "ayrılmayacak" dese de %84 doğru tahmin** yapardı. Confusion matrix'e bakmak şart, accuracy tek başına yanıltıyor.
 
-## 🤖 Model Performance
+Bir sonraki versiyonda **SMOTE** ile oversampling denemek istiyorum. Bir de gerçek bir yöneticiye sunmak gerekse, modelin sonuçlarını SHAP değerleriyle bireysel olarak açıklayabilmek lazım — bu da öğrenme listemde.
 
-| Model | Accuracy | F1 (Attrition class) |
-|-------|----------|----------------------|
-| Logistic Regression | 87% | 0.51 |
-| Random Forest | 89% | 0.56 |
+## Author
 
-## 📝 License
-
-[MIT](LICENSE)
+Nisa Kaya — [github.com/nisakayaa](https://github.com/nisakayaa)
